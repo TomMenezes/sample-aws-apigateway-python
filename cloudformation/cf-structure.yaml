@@ -1,0 +1,88 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "structure template for api"
+
+Resources:
+  PolicyDynamo:
+    Type: AWS::IAM::Policy
+    DependsOn:
+      - LambdaRole
+    Properties: 
+      PolicyName: policy-movies-database
+      Roles: 
+        - Ref: LambdaRole
+      PolicyDocument: {
+        "Version": "2012-10-17",
+        "Statement":
+        {
+          "Action": [
+              "dynamodb:BatchGet*",
+              "dynamodb:DescribeStream",
+              "dynamodb:DescribeTable",
+              "dynamodb:Get*",
+              "dynamodb:Query",
+              "dynamodb:Scan",
+              "dynamodb:BatchWrite*",
+              "dynamodb:UpdateItem",
+              "dynamodb:PutItem",
+              "dynamodb:DeleteItem"
+          ],
+          "Resource": [
+              "arn:aws:dynamodb:us-east-1:931183755089:table/movie"
+          ],
+          "Effect": "Allow"
+        }
+      }
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: role-movie
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+            - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+
+  #Dynamo database
+  MoviesTable: 
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: year
+          AttributeType: N
+        - 
+          AttributeName: title
+          AttributeType: S
+      KeySchema:
+        - 
+          AttributeName: year
+          KeyType: HASH
+        - 
+          AttributeName: title
+          KeyType: RANGE
+      TableName: Movies
+      BillingMode: PAY_PER_REQUEST
+      Tags:
+        -
+          Key: Environment
+          Value: Production
+        -
+          Key: Application
+          Value: Movie
+        -
+          Key: Layer
+          Value: Database
+
+Outputs:
+  LambdaRoleArn:
+    Description: LambdaRole Arn
+    Value: !GetAtt LambdaRole.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-LambdaRoleArn'

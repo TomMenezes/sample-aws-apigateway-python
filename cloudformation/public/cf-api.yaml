@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This stack is to create an apigateway on aws environment
+
+Resources:
+  APIGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: api-movie-public
+      EndpointConfiguration: 
+        Types:
+          - EDGE
+
+  APIGatewayResourceApi:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref APIGateway
+      ParentId: !GetAtt APIGateway.RootResourceId
+      PathPart: "api"
+
+  APIGatewayResourceMovie:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref APIGateway
+      ParentId: !Ref APIGatewayResourceApi
+      PathPart: "movie"
+
+  APIGatewayResourceMovieId:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref APIGateway
+      ParentId: !Ref APIGatewayResourceMovie
+      PathPart: "{id}"
+
+Outputs:
+  APIGateway:
+    Description: APIGateway
+    Value: !Ref APIGateway
+    Export:
+      Name: !Sub '${AWS::StackName}-APIGateway'
+
+  APIGatewayResourceApi:
+    Description: API Gateway Resource Api
+    Value: !Ref APIGatewayResourceApi
+    Export: 
+      Name: !Sub '${AWS::StackName}-APIGatewayResourceApi'
+
+  APIGatewayResourceMovie:
+    Description: API Gateway Resource Api Movie
+    Value: !Ref APIGatewayResourceMovie
+    Export: 
+      Name: !Sub '${AWS::StackName}-APIGatewayResourceMovie'
+
+  APIGatewayResourceMovieId:
+    Description: API Gateway Resource Api Movie Id
+    Value: !Ref APIGatewayResourceMovieId
+    Export: 
+      Name: !Sub '${AWS::StackName}-APIGatewayResourceMovieId'

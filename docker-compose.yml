@@ -1,0 +1,10 @@
+version: '3.2'
+
+services:
+  test-dynamo:
+    container_name: dynamodb-local
+    hostname: dynamodb-local
+    image: amazon/dynamodb-local:latest
+    ports:
+      - "8000:8000"
+

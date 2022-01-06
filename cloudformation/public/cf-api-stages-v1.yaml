@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "Template do ambiente api-portal-search"
+Parameters:
+  APIStackName:
+    Type: String
+    Default: stack-api-movie
+
+Resources:
+  APIGatewayDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Fn::ImportValue:
+          Fn::Sub: "${APIStackName}-APIGateway"
+
+  APIGatewayV1:
+    Type: AWS::ApiGateway::Stage
+    DependsOn: 
+      - APIGatewayDeployment
+    Properties:
+      StageName: v1
+      Description: v1 Stage
+      RestApiId:
+        Fn::ImportValue:
+          Fn::Sub: "${APIStackName}-APIGateway"
+      DeploymentId: !Ref APIGatewayDeployment
+      Variables:
+        stageAlias: v1
