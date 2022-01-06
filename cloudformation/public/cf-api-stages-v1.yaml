@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: "Template do ambiente api-portal-search"
+Description: "Template to create stage for api"
 Parameters:
   APIStackName:
     Type: String
