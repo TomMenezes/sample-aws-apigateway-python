@@ -6,4 +6,3 @@ https://medium.com/@sumindaniro/secure-aws-api-gateway-using-a-lambda-authorizer
 
 # sample dynamodb for python
 https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.Python.html
-https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.Python.03.html
